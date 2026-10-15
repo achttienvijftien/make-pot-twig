@@ -36,7 +36,7 @@ final class TwigCodeExtractor extends Extractor {
 		try {
 			$php = self::toPhp( $text, $options['file'] ?? '' );
 		} catch ( Error $e ) {
-			WP_CLI::warning( sprintf( 'Could not parse %s: %s', $options['file'] ?? 'template', $e->getRawMessage() ) );
+			WP_CLI::warning( 'Could not parse template: ' . $e->getMessage() );
 			return;
 		}
 
@@ -59,9 +59,8 @@ final class TwigCodeExtractor extends Extractor {
 		$php  = '<?php';
 		$line = 1;
 		foreach ( $calls as [ $call_line, $code ] ) {
-			$php .= str_repeat( "\n", max( 0, $call_line - $line ) ) . " $code;";
-			// Literal newlines in a string push everything after it down.
-			$line = max( $line, $call_line ) + substr_count( $code, "\n" );
+			$php .= str_repeat( "\n", $call_line - $line ) . " $code;";
+			$line = $call_line;
 		}
 
 		return $php;
@@ -92,7 +91,9 @@ final class TwigCodeExtractor extends Extractor {
 			$args = [];
 			// ponytail: named arguments (__(text: 'x')) are emitted positionally in written order.
 			foreach ( $node->getNode( 'arguments' ) as $arg ) {
-				$args[] = $arg instanceof ConstantExpression ? var_export( $arg->getAttribute( 'value' ), true ) : 'null';
+				$value = $arg instanceof ConstantExpression ? $arg->getAttribute( 'value' ) : null;
+				// Double-quoted with escaped newlines, so each call stays on one line of the generated PHP.
+				$args[] = is_string( $value ) ? '"' . addcslashes( $value, "\\\"\$\n\r" ) . '"' : var_export( $value, true );
 			}
 			$calls[] = [ $node->getTemplateLine(), $node->getAttribute( 'name' ) . '(' . implode( ', ', $args ) . ')' ];
 		}

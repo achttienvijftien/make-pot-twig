@@ -1,3 +1,13 @@
+#: templates/lines.twig:1
+msgid ""
+"Line\n"
+"break"
+msgstr ""
+
+#: templates/lines.twig:1
+msgid "Same line"
+msgstr ""
+
 #: templates/page.twig:5
 #: functions.php:2
 msgid "Hello"
