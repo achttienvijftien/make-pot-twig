@@ -2,7 +2,7 @@
   "name": "achttienvijftien/make-pot-twig",
   "description": "Adds Twig template support to `wp i18n make-pot`, using Twig's own parser.",
   "type": "wp-cli-package",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "authors": [
     {
       "name": "1815",
