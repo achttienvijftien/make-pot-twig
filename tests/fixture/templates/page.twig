@@ -1,0 +1,23 @@
+{% extends "base.twig" %}
+{% import "macros.twig" as m %}
+
+{% block content %}
+	<h1>{{ __("Hello", "fixture") }}</h1>
+	{{ __(
+		"Multi-line call",
+		"fixture"
+	) }}
+	{{ _x("Post", "noun", "fixture") }} {{ _n("%d item", "%d items", items|length, "fixture")|format(items|length) }}
+	{{ __("Other domain", "other") }}
+	{{ __('It\'s "quoted", (with parens)', "fixture") }}
+	{{ custom_function(__("Inside unknown function", "fixture"))|custom_filter }}
+	{% if post is custom_test %}{{ __("After custom test", "fixture") }}{% endif %}
+	{% embed "card.twig" %}
+		{% block body %}{{ __("Inside embed", "fixture") }}{% endblock %}
+	{% endembed %}
+	{{ __(dynamic, "fixture") }}
+	{# __("Inside comment", "fixture") #}
+	<p>__("Plain text", "fixture")</p>
+{% endblock %}
+
+{% macro hint() %}{{ _e("Inside macro", "fixture") }}{% endmacro %}

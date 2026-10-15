@@ -1,0 +1,45 @@
+#: templates/page.twig:5
+#: functions.php:2
+msgid "Hello"
+msgstr ""
+
+#: templates/page.twig:6
+msgid "Multi-line call"
+msgstr ""
+
+#: templates/page.twig:10
+msgctxt "noun"
+msgid "Post"
+msgstr ""
+
+#: templates/page.twig:10
+#, php-format
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/page.twig:12
+msgid "It's \"quoted\", (with parens)"
+msgstr ""
+
+#: templates/page.twig:13
+msgid "Inside unknown function"
+msgstr ""
+
+#: templates/page.twig:14
+msgid "After custom test"
+msgstr ""
+
+#: templates/page.twig:16
+msgid "Inside embed"
+msgstr ""
+
+#: templates/page.twig:23
+msgid "Inside macro"
+msgstr ""
+
+#. Theme Name of the theme
+#: style.css
+msgid "Fixture"
+msgstr ""
