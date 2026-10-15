@@ -26,13 +26,15 @@ All `make-pot` flags work as usual. `--skip-php` skips Twig too, since Twig stri
 
 `command.php` registers `MakePotCommand`, a subclass of WP-CLI's command, as `i18n make-pot`. Registration happens on the `find_command_to_run_pre` hook, because WP-CLI registers its bundled commands after packages and `--require` files have loaded. The subclass adds the Twig strings from `set_default_headers()`, the only point where the parent's `extract_strings()` passes its `Translations` instance out.
 
-The Twig environment accepts any function, filter or test name, so Timber and theme extensions don't need to be loaded. A template that fails to parse produces a warning and is skipped.
+The Twig environment accepts any function, filter, test or tag name, so Timber and theme extensions don't need to be loaded. Unknown tags are stubbed: their arguments are skipped, and the body of a block tag is scanned like the rest of the template. A template that still fails to parse produces a warning and is skipped.
 
 ## Not supported
 
 - `{# translators: … #}` comments. Twig's lexer drops comments.
 - Named arguments (`__(text: 'x')`). They are read in the order they're written.
 - Indirect calls such as `fn('__', 'x', 'domain')`.
+- Gettext calls inside an unknown tag's own arguments (`{% mytag __('x') %}`). Calls in the tag's body are found.
+- Custom operators registered by extensions. These cause a parse warning.
 
 ## Test
 

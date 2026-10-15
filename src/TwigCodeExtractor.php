@@ -7,11 +7,14 @@ use Gettext\Translations;
 use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Source;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\TwigTest;
@@ -78,9 +81,36 @@ final class TwigCodeExtractor extends Extractor {
 			$env->registerUndefinedFunctionCallback( fn( $name ) => new TwigFunction( $name ) );
 			$env->registerUndefinedFilterCallback( fn( $name ) => new TwigFilter( $name ) );
 			$env->registerUndefinedTestCallback( fn( $name ) => new TwigTest( $name ) );
+			$env->registerUndefinedTokenParserCallback( fn( $name ) => self::stubTag( $name ) );
 		}
 
 		return $env;
+	}
+
+	/**
+	 * Parser for a tag only known at runtime: skips its arguments. Its {% end… %} gets a stub of
+	 * its own, so a block tag's body is parsed as regular template content.
+	 *
+	 * ponytail: gettext calls inside the tag's own arguments are skipped too.
+	 */
+	private static function stubTag( string $name ): AbstractTokenParser {
+		return new class( $name ) extends AbstractTokenParser {
+			public function __construct( private string $tag ) {}
+
+			public function getTag(): string {
+				return $this->tag;
+			}
+
+			public function parse( Token $token ): Node {
+				$stream = $this->parser->getStream();
+				while ( ! $stream->test( Token::BLOCK_END_TYPE ) ) {
+					$stream->next();
+				}
+				$stream->next();
+
+				return new EmptyNode( $token->getLine() );
+			}
+		};
 	}
 
 	/**

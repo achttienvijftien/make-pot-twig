@@ -1,0 +1,6 @@
+{% cache 'key' ttl(300) %}{{ __("Inside unknown block tag", "fixture") }}{% endcache %}
+{% if user %}
+	{% authorized 'edit' %}{{ __("Authorized", "fixture") }}{% otherwise %}{{ __("Not authorized", "fixture") }}{% endauthorized %}
+{% endif %}
+{% single_tag foo with { a: 1 } only %}
+{{ __("After single tag", "fixture") }}

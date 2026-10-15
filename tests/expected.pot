@@ -49,6 +49,22 @@ msgstr ""
 msgid "Inside macro"
 msgstr ""
 
+#: templates/tags.twig:1
+msgid "Inside unknown block tag"
+msgstr ""
+
+#: templates/tags.twig:3
+msgid "Authorized"
+msgstr ""
+
+#: templates/tags.twig:3
+msgid "Not authorized"
+msgstr ""
+
+#: templates/tags.twig:6
+msgid "After single tag"
+msgstr ""
+
 #. Theme Name of the theme
 #: style.css
 msgid "Fixture"
